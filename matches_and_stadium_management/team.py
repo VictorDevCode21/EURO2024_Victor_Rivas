@@ -2,11 +2,17 @@ import typing
 
 
 class Team:
-    def __init__(self, name: str, fifa_code: str, group: str):
+    def __init__(self, id: int, code: str, name: str, group: str):
+        self.id = id
+        self.code = code
         self.name = name 
-        self.fifa_code = fifa_code 
         self.group = group 
         
     def get_info(self):
-        return f"Team: {self.name}  Code: ({self.fifa_code}) - Group: {self.group}"
+        return f"ID: {self.id} Team: {self.name}  Code: ({self.code}) - Group: {self.group}"
     
+    def __str__(self):
+        return self.get_info()
+    
+    def __repr__(self):
+        return self.__str__()
