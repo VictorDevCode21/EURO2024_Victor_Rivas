@@ -2,7 +2,6 @@ from typing import List
 from datetime import datetime as date
 from .team import Team
 from .stadium import Stadium
-from .match import Match
 
 # Creamos la clase match
 class Match:
@@ -18,7 +17,7 @@ class Match:
     
     # Definimos el metodo para filtrar los partidos dependiendo de la fecha, equipo y estadio
     @staticmethod 
-    def filter_matches(matches: List[Match], **props):
+    def filter_matches(matches, **props):
         # Creamos una lista para almacenar los partidos filtrados
         filtered_matches = []
         
