@@ -95,6 +95,7 @@ def Main():
     matches = []
     for match in matches_data:
         try:
+            # Definimos las variables para la busqueda de los partidos
             match_id = match['id']
             match_number = match['number']
             home_team_id = match['home']['id']
@@ -121,9 +122,22 @@ def Main():
         except KeyError as e:
             print(f"KeyError: {e} en el partido {match}")
 
-    print(matches)
-    
-    # for match in matches:
+    # Modulo 1. Filtrar partidos:
+    # print("\nFiltrar partidos por equipo 'Germany':")
+    # filtered_by_team = Match.filter_matches(matches, team=teams['31c88261-1efd-444e-95ac-b7c1cd034bfd'])
+    # for match in filtered_by_team:
     #     print(match.get_info())
+    
+    # print("\nFiltrar partidos por estadio 'Estadio Olímpico de Berlín': ")
+    # filtered_by_stadium = Match.filter_matches(matches, stadium_id="2eead114-7627-45c4-83ab-ee3d66a6c62f")
+    # for match in filtered_by_stadium:
+    #     print(match.get_info())
+
+    # print("\nFiltrar partidos por fecha '2024-06-14':")
+    # filtered_by_date = Match.filter_matches(matches, date=datetime(2024, 6, 15))
+    # for match in filtered_by_date:
+    #     print(match.get_info())
+    
+    # Modulo 2. Gestion de ventas de entradas
 
 Main()

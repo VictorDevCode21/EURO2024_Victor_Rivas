@@ -8,7 +8,7 @@ class Stadium:
         self.capacity = capacity
         
     def get_info(self):
-        return f'The name of the stadium is {self.name}, the id is: {self.id}, the location is: {self.city}, and the capacity is {self.capacity[0]} for General and {self.capacity[1]} for VIP '
+        return f'{self.name}, the location of the stadium is: {self.city}, and the capacity is {self.capacity[0]} for General and {self.capacity[1]} for VIP '
     
     def __str__(self):
         return self.get_info()

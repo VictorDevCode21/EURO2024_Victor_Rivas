@@ -9,7 +9,7 @@ class Team:
         self.group = group 
         
     def get_info(self):
-        return f"ID: {self.id} Team: {self.name}  Code: ({self.code}) - Group: {self.group}"
+        return f"Team: {self.name}  Code: ({self.code}) - Group: {self.group}"
     
     def __str__(self):
         return self.get_info()
