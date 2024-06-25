@@ -1,4 +1,5 @@
 import typing
+import json
 
 class Stadium:
     def __init__(self, id: str, name: str, city: str, capacity: int):
@@ -7,26 +8,51 @@ class Stadium:
         self.city = city
         self.capacity = capacity
         self.seats = {'General': [], 'VIP': []}
-        self.booked_seats = {"General": [], "VIP": []}
+        self.booked_seats = {"general": [], "vip": []}
         
     def set_seats(self, general_capacity: list, vip_capacity: list):
         self.general_seats = [f"G{i}" for i in range(1, general_capacity + 1)]
         self.vip_seats = [f"V{i}" for i in range(1, vip_capacity + 1)]
         
+    def set_booked_seats(self, tickets_file_path, match_id):
+        try:
+            with open(tickets_file_path, 'r') as file:
+                tickets = json.load(file)
+                print(f"Tickets loaded from file: {tickets}")  # Debugging line to see the loaded tickets
+                for ticket in tickets:
+                    print(f"Processing ticket: {ticket}")  # Debugging line to see each ticket being processed
+                    if ticket['match_id'] == match_id:
+                        ticket_type = ticket['ticket_type'].lower()  # Ensure ticket type is lower case
+                        seat = ticket['seat']
+                        print(f"Match found for match_id: {match_id}, ticket_type: {ticket_type}, seat: {seat}")  # Debugging line to see matched tickets
+                        if ticket_type == "general":
+                            if seat not in self.booked_seats["general"]:
+                                self.booked_seats["general"].append(seat)
+                                print(f"Added seat {seat} to general booked seats")  # Debugging line to confirm seat addition
+                        elif ticket_type == "vip":
+                            if seat not in self.booked_seats["vip"]:
+                                self.booked_seats["vip"].append(seat)
+                                print(f"Added seat {seat} to vip booked seats")  # Debugging line to confirm seat addition
+            print(f"Booked seats after loading: {self.booked_seats}")  # Debugging line to see the booked seats after loading
+        except FileNotFoundError:
+            print(f"El archivo {tickets_file_path} no se encontró.")
+        except json.JSONDecodeError:
+            print("Error al decodificar el archivo JSON.")
+        
     def get_available_seats(self, ticket_type):
         if ticket_type.lower() == "general":
-            return [seat for seat in self.general_seats if seat not in self.booked_seats["General"]]
+            return [seat for seat in self.general_seats if seat not in self.booked_seats["general"]]
         elif ticket_type.lower() == "vip":
-            return [seat for seat in self.vip_seats if seat not in self.booked_seats["VIP"]]
+            return [seat for seat in self.vip_seats if seat not in self.booked_seats["vip"]]
         else:
             return []
         
     def book_seat(self, ticket_type, seat):
-        if ticket_type.lower() == "general" and seat in self.general_seats and seat not in self.booked_seats["General"]:
-            self.booked_seats["General"].append(seat)
+        if ticket_type.lower() == "general" and seat in self.general_seats and seat not in self.booked_seats["general"]:
+            self.booked_seats["general"].append(seat)
             return True
-        elif ticket_type.lower() == "vip" and seat in self.vip_seats and seat not in self.booked_seats["VIP"]:
-            self.booked_seats["VIP"].append(seat)
+        elif ticket_type.lower() == "vip" and seat in self.vip_seats and seat not in self.booked_seats["vip"]:
+            self.booked_seats["vip"].append(seat)
             return True
         else:
             return False

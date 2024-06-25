@@ -71,25 +71,31 @@ class Sales:
         match_index = int(input("Seleccione el partido (número): ")) - 1
         selected_match = matches[match_index]
 
-        ticket_type = input("Tipo de entrada (General/VIP): ")
+        ticket_type = input("Tipo de entrada (General/VIP): ").lower()
         
+        selected_match.stadium.set_booked_seats('data/tickets.txt', selected_match.id)
         available_seats = selected_match.stadium.get_available_seats(ticket_type)
+        
         print("\nAsientos disponibles:\n")
         print(available_seats)
         
-        seat = input("Seleccione su asiento: ")
-        while seat not in available_seats:
-            print("El asiento no está disponible. Por favor, seleccione otro asiento.")
-            seat = input("Seleccione su asiento: ")
+        print("Asientos no disponibles:\n")
+        print(selected_match.stadium.booked_seats[ticket_type])
         
+        seat_index = int(input("Seleccione el índice de su asiento: "))
+        while seat_index < 0 or seat_index >= len(available_seats) or available_seats[seat_index] in selected_match.stadium.booked_seats[ticket_type]:
+            print("El índice del asiento no es válido o el asiento ya está reservado. Por favor, seleccione otro índice.")
+            seat_index = int(input("Seleccione el índice de su asiento: "))
 
-        return name, id, age, selected_match.id, ticket_type, seat
+        seat = available_seats[seat_index]
+        print(f"Selected seat: {seat}")
+        return name, id, age,selected_match , selected_match.id, ticket_type, seat
 
     def process_ticket_sale(self, matches):
-        name, id, age, match, match_id, ticket_type, seat = self.get_user_input(matches)
+        name, id, age, selected_match, selected_match.id, ticket_type, seat = self.get_user_input(matches)
 
         self.add_client(name, id, age)
-        self.add_ticket(id, match_id, ticket_type, seat)
+        self.add_ticket(id, selected_match.id, ticket_type, seat)
 
         ticket_price = 35 if ticket_type.lower() == 'general' else 75
 
@@ -106,9 +112,8 @@ class Sales:
         print(f"IVA: ${iva:.2f}")
         print(f"Total: ${total:.2f}")
 
-        confirm = input("¿Desea proceder con el pago? (sí/no): ")
-        if confirm.lower() == 'sí':
-            match.stadium.book_seat(ticket_type, seat)
-            print("Pago exitoso. ¡Gracias por su compra!")
+        confirm = input("¿Desea proceder con el pago? (si/no): ")
+        if confirm.lower() == 'si':
+            print("Pago exitoso. ¡Gracias por su compra! \n")
         else:
-            print("La compra ha sido cancelada.")
+            print("La compra ha sido cancelada.\n")
