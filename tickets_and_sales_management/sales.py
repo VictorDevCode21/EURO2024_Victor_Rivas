@@ -57,11 +57,13 @@ class Sales:
         digits = sorted(str(number))
         length = len(digits)
 
-        # Debe tener un número par de dígitos
+        # Comprobando que no sea un número impar
         if length % 2 != 0:
             return False
 
         # Probar todas las posibles combinaciones de factores
+        
+        # dividiendo la longitud a la mitad
         half_length = length // 2
         for i in range(10**(half_length - 1), 10**half_length):
             for j in range(i, 10**half_length):
