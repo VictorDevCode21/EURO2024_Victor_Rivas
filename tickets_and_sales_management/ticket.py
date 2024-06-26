@@ -1,9 +1,11 @@
 from datetime import datetime as date
-
+import uuid
 
 # Definicion de la clase Ticket
 class Ticket:
-    def __init__(self, client_id: int, match_id: str, ticket_type: str, seat: str):
+    def __init__(self, client_id: int, match_id: str, ticket_type: str, seat: str, ticket_id: str, assistance: bool = False):
+        self.ticket_id = ticket_id or str(uuid.uuid4())
+        self.assitance = assistance
         self.client_id = client_id
         self.match_id = match_id
         self.ticket_type = ticket_type
@@ -26,6 +28,8 @@ class Ticket:
             "match_id": self.match_id,
             "ticket_type": self.ticket_type,
             "seat": self.seat,
+            "ticket_id": self.ticket_id,    
+            "assistance": self.assitance
         }
 
     # Metodo para transformar la informacion del boleto de objeto a string

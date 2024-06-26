@@ -3,6 +3,7 @@ from .client import Client
 from .ticket import Ticket
 import json 
 import os 
+import uuid
 
 
 
@@ -23,7 +24,7 @@ class Sales:
         # Si hay data de tickets recorremos los tickets_data y los guardamos en la lista tickets
         if tickets_data:
             for ticket in tickets_data:
-                self.tickets.append(Ticket(ticket['client_id'], ticket['match_id'], ticket['ticket_type'], ticket['seat']))
+                self.tickets.append(Ticket(ticket['client_id'], ticket['match_id'], ticket['ticket_type'], ticket['seat'], ticket.get('ticket_id'), ticket.get('assistance')))
 
     # Definimos un metodo para agregar clientes
     def add_client(self, name: str, id: int, age: int):
@@ -33,9 +34,9 @@ class Sales:
             print(f"Client with ID {id} already exists.")
 
     # Definimos un metodo para agregar tickets
-    def add_ticket(self, client_id: int, match_id: str, ticket_type: str, seat: str):
+    def add_ticket(self, client_id: int, match_id: str, ticket_type: str, seat: str, ticket_id: str = None, assistance: bool = False):
         if client_id in self.clients:
-            ticket = Ticket(client_id, match_id, ticket_type, seat)
+            ticket = Ticket(client_id, match_id, ticket_type, seat, ticket_id, False)
             self.tickets.append(ticket)
         else:
             print(f"No client found with ID {client_id}")
@@ -125,10 +126,9 @@ class Sales:
     # Procesamos el ticket obteniendo la informacion previamente pedida al usuario
     def process_ticket_sale(self, matches):
         name, id, age, selected_match, selected_match.id, ticket_type, seat = self.get_user_input(matches)
+        ticket_id = str(uuid.uuid4())
 
-        # Agregamos el cliente y el ticket
-        self.add_client(name, id, age)
-        self.add_ticket(id, selected_match.id, ticket_type, seat)
+        
 
         # Calculamos el precio del ticket
         ticket_price = 35 if ticket_type.lower() == 'general' else 75
@@ -143,6 +143,7 @@ class Sales:
 
         # Mostramos la informacion del ticket al usuario 
         print(f"\nInformación del ticket:")
+        print(f"Numero de ticket: {ticket_id}")
         print(f"Asiento: {seat}")
         print(f"Subtotal: ${subtotal:.2f}")
         print(f"Descuento: ${subtotal * discount:.2f}")
@@ -154,6 +155,9 @@ class Sales:
         
         # Si confirma, procesamos la compra, de lo contrario, la cancelamos.
         if confirm.lower() == 'si':
+            # Agregamos el cliente y el ticket
+            self.add_client(name, id, age)
+            self.add_ticket(id, selected_match.id, ticket_type, seat, ticket_id)
             print("Pago exitoso. ¡Gracias por su compra! \n")
         else:
             print("La compra ha sido cancelada.\n")
