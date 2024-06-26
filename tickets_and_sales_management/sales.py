@@ -82,12 +82,12 @@ class Sales:
         print("Asientos no disponibles:\n")
         print(selected_match.stadium.booked_seats[ticket_type])
         
-        seat_index = int(input("Seleccione el índice de su asiento: "))
-        while seat_index < 0 or seat_index >= len(available_seats) or available_seats[seat_index] in selected_match.stadium.booked_seats[ticket_type]:
-            print("El índice del asiento no es válido o el asiento ya está reservado. Por favor, seleccione otro índice.")
-            seat_index = int(input("Seleccione el índice de su asiento: "))
+        seat_number = input("Seleccione su asiento: (G/V seguido del numero de asiento) ").upper()
+        while seat_number not in available_seats:
+            print("El número del asiento no es válido o el asiento ya está reservado. Por favor, seleccione otro asiento.")
+            seat_number = input("Seleccione su asiento: (G/V seguido del numero de asiento)").upper()
 
-        seat = available_seats[seat_index]
+        seat = seat_number
         print(f"Selected seat: {seat}")
         return name, id, age,selected_match , selected_match.id, ticket_type, seat
 

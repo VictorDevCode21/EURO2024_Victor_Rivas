@@ -151,7 +151,7 @@ def Main():
         print("Opcion 3: Gestion de asistencia a partidos ")
         print("Opcion 4: Gestion de restaurantes ")
         print("Opcion 5: Gestion de venta de restaurantes ")
-        print("Opcion 6: Indicadores de gestion \n")
+        print("Opcion 6: Indicadores de gestion")
         print("Opcion 7: Salir \n")
         
         option = int(input("Ingrese el numero de la opcion deseada: "))

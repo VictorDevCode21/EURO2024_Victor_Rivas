@@ -18,22 +18,22 @@ class Stadium:
         try:
             with open(tickets_file_path, 'r') as file:
                 tickets = json.load(file)
-                print(f"Tickets loaded from file: {tickets}")  # Debugging line to see the loaded tickets
+                print(f"Tickets loaded from file: {tickets}") 
                 for ticket in tickets:
-                    print(f"Processing ticket: {ticket}")  # Debugging line to see each ticket being processed
+                    print(f"Processing ticket: {ticket}")
                     if ticket['match_id'] == match_id:
-                        ticket_type = ticket['ticket_type'].lower()  # Ensure ticket type is lower case
+                        ticket_type = ticket['ticket_type'].lower()
                         seat = ticket['seat']
-                        print(f"Match found for match_id: {match_id}, ticket_type: {ticket_type}, seat: {seat}")  # Debugging line to see matched tickets
+                        print(f"Match found for match_id: {match_id}, ticket_type: {ticket_type}, seat: {seat}")
                         if ticket_type == "general":
                             if seat not in self.booked_seats["general"]:
                                 self.booked_seats["general"].append(seat)
-                                print(f"Added seat {seat} to general booked seats")  # Debugging line to confirm seat addition
+                                print(f"Added seat {seat} to general booked seats")
                         elif ticket_type == "vip":
                             if seat not in self.booked_seats["vip"]:
                                 self.booked_seats["vip"].append(seat)
-                                print(f"Added seat {seat} to vip booked seats")  # Debugging line to confirm seat addition
-            print(f"Booked seats after loading: {self.booked_seats}")  # Debugging line to see the booked seats after loading
+                                print(f"Added seat {seat} to vip booked seats")
+            print(f"Booked seats after loading: {self.booked_seats}")
         except FileNotFoundError:
             print(f"El archivo {tickets_file_path} no se encontró.")
         except json.JSONDecodeError:
