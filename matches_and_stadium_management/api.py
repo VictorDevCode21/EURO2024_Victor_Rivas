@@ -45,6 +45,7 @@ class API:
             # Levantamos una excepcion para los codigos de estado http
             res.raise_for_status()
             return res.json()
+        # Capturamos la excepcion en caso de que falle la peticion y la mostramos
         except req.exceptions.RequestException as e:
             print(f"Error al hacer la petición a la API para obtener los partidos: {e}")
             return None

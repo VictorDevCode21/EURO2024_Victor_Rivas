@@ -33,7 +33,7 @@ def create_data_folder_and_files():
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
     
-    # 
+    # Recorremos las rutas para crear los archivos en caso de que no existan
     for file_path in [teams_file, stadiums_file, matches_file, clients_file, tickets_file]:
         if not os.path.exists(file_path):
             # Intentamos crear los archivos 
@@ -120,10 +120,12 @@ def Main():
             match_group = match['group']
             stadium_id = match['stadium_id']
 
+            # Buscamos los equipos y estadios con los keys de "id"
             home_team = teams.get(home_team_id)
             away_team = teams.get(away_team_id)
             stadium = stadiums.get(stadium_id)
             
+            # Manejamos los casos en los que no se encuentren los equipos o estadios
             if not home_team:
                 print(f"Equipo local con ID {home_team_id} no encontrado para el partido {match_id}")
             if not away_team:
@@ -131,10 +133,12 @@ def Main():
             if not stadium:
                 print(f"Estadio con ID {stadium_id} no encontrado para el partido {match_id}")
 
+            # Si se encuentran los equipos y estadios, creamos las instancias de Match
             if home_team and away_team and stadium:
                 matches.append(Match(match_id, match_number, home_team, away_team, match_date, match_group, stadium))
             else:
                 print(f"Datos faltantes para el partido con id {match_id}")
+        #Manejamos las posibles excepciones de tipo KeyError 
         except KeyError as e:
             print(f"KeyError: {e} en el partido {match}")
 
@@ -143,8 +147,8 @@ def Main():
     sales.load_data(clients_data, tickets_data)
 
     # Ejecucion del programa: 
-    
     while True: 
+        # Imprimimos el menu
         print("Selecciona un modulo del menu: ")
         print("Opcion 1: Gestion de partidos y estadios ")
         print("Opcion 2: Gestion de ventas de entradas")
@@ -154,8 +158,10 @@ def Main():
         print("Opcion 6: Indicadores de gestion")
         print("Opcion 7: Salir \n")
         
+        # Solicitamos al usuario que ingrese la opcion deseada
         option = int(input("Ingrese el numero de la opcion deseada: "))
         
+        # Manejamos las opciones acorde a los modulos existentes
         if option == 2:
             sales.process_ticket_sale(matches)
             save_data_to_file([vars(client) for client in sales.clients.values()], clients_file)

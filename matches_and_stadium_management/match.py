@@ -29,9 +29,11 @@ class Match:
     def get_info(self):
         return f"The match is: {self.home_team.get_info()} vs {self.away_team.get_info()} at {self.stadium.get_info()} on {self.date_time}"
 
+    # Definimos el metodo para transformar la informacion del partido de objeto a string
     def __str__(self):
         return self.get_info()
 
+    # Definimos el metodo para retornar un string imprimible con la informacion del partido
     def __repr__(self):
         return self.__str__()
 
