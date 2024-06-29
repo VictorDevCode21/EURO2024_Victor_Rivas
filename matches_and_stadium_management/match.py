@@ -15,7 +15,7 @@ class Match:
         away_team: List[Team],
         date_time: date,
         group: str,
-        stadium: List[Stadium],
+        stadium: Stadium,
     ):
         self.id = id
         self.number = number
@@ -27,7 +27,7 @@ class Match:
 
     # definimos el metodo para obtener informacion del partido
     def get_info(self):
-        return f"The match is: {self.home_team.get_info()} vs {self.away_team.get_info()} at {self.stadium.get_info()} on {self.date_time}"
+        return f"\nThe match is: {self.home_team.get_info()} vs {self.away_team.get_info()} at {self.stadium.get_info()} on {self.date_time}\n"
 
     # Definimos el metodo para transformar la informacion del partido de objeto a string
     def __str__(self):
@@ -48,13 +48,13 @@ class Match:
             match_date = props.get("date")
             match_team = props.get("team")
             match_stadium = props.get("stadium_id")
-
+            
             # creamos condiciones para que se fitre dependiendo de el prop que reciba
             if match_date and match.date_time != match_date:
                 continue
             if match_team and match_team not in (match.home_team, match.away_team):
                 continue
-            if match_stadium and (match_stadium != match.stadium.id):
+            if match_stadium and match_stadium != match.stadium.id:
                 continue
 
             # Agregamos los partidos que cumplan con el filtro, en caso de que no hayan, se quedara la lista vacia

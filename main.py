@@ -207,6 +207,51 @@ def Main():
         option = int(input("Ingrese el numero de la opcion deseada: "))
 
         # Manejamos las opciones, acorde a los modulos existentes
+        # Opcion 1: Filtrar partidos
+        if option == 1:
+            sec_option = int(input("\nSeleccione una opción: \n1. Filtrar partidos por equipo \n2. Filtrar partidos por estadio \n3. Filtrar partidos por fecha\n"))
+
+            if sec_option == 1:
+                for t in teams.values():
+                    print(t.get_info())
+                chosen_team = input("Ingrese el nombre del equipo: ")
+                matching_teams = [team for team in teams.values() if team.name.lower() == chosen_team.lower()]
+                
+                if matching_teams:
+                    chosen_team_obj = matching_teams[0]
+                    print(f"\nFiltrando partidos por equipo {chosen_team_obj.name}:")
+                    filtered_by_team = Match.filter_matches(matches, team=chosen_team_obj)
+                    for match in filtered_by_team:
+                        print(match.get_info())
+                else:
+                    print(f"No se encontró el equipo con nombre '{chosen_team}'.")
+
+            elif sec_option == 2:
+                print("\nEstadios disponibles: \n")
+                for s in stadiums.values():
+                    print(f'{s.get_info()}\n')
+                chosen_stadium = input("Ingrese el nombre del estadio: ")
+                matching_stadiums = [stadium for stadium in stadiums.values() if stadium.name.lower() == chosen_stadium.lower()]
+                
+                if matching_stadiums:
+                    chosen_stadium_obj = matching_stadiums[0]
+                    print(f"\nFiltrando partidos por estadio {chosen_stadium_obj.name}:")
+                    filtered_by_stadium = Match.filter_matches(matches, stadium_id=chosen_stadium_obj.id)
+                    for match in filtered_by_stadium:
+                        print(match.get_info())
+                else:
+                    print(f"No se encontró el estadio con nombre '{chosen_stadium}'.")
+
+            elif sec_option == 3:
+                chosen_date = input("Ingrese la fecha del partido (YYYY-MM-DD): ")
+                try:
+                    chosen_date_obj = datetime.fromisoformat(chosen_date)
+                    print(f"\nFiltrando partidos por fecha {chosen_date}:")
+                    filtered_by_date = Match.filter_matches(matches, date=chosen_date_obj)
+                    for match in filtered_by_date:
+                        print(match.get_info())
+                except ValueError:
+                    print(f"Fecha inválida: {chosen_date}. Por favor ingrese la fecha en formato YYYY-MM-DD.")
         
         # Opcion 2: Gestión de ventas de entradas
         if option == 2:
@@ -316,21 +361,6 @@ def Main():
 
     print("Gracias por usar el programa de la EURO 2024, ¡vuelva pronto!")
 
-    # Modulo 1. Filtrar partidos:
-    # print("\nFiltrar partidos por equipo 'Germany':")
-    # filtered_by_team = Match.filter_matches(matches, team=teams['31c88261-1efd-444e-95ac-b7c1cd034bfd'])
-    # for match in filtered_by_team:
-    #     print(match.get_info())
-
-    # print("\nFiltrar partidos por estadio 'Estadio Olímpico de Berlín': ")
-    # filtered_by_stadium = Match.filter_matches(matches, stadium_id="2eead114-7627-45c4-83ab-ee3d66a6c62f")
-    # for match in filtered_by_stadium:
-    #     print(match.get_info())
-
-    # print("\nFiltrar partidos por fecha '2024-06-14':")
-    # filtered_by_date = Match.filter_matches(matches, date=datetime(2024, 6, 15))
-    # for match in filtered_by_date:
-    #     print(match.get_info())
-
+    
 
 Main()
