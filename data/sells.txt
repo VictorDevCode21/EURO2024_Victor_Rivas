@@ -1,0 +1,1 @@
+[{"client_id": 30496974, "product_name": "Refinado Algod\u00f3n Mesa", "quantity": 5, "total": 1444.1999999999998, "discount": 0, "final_price": 1444.1999999999998}, {"client_id": 30496974, "product_name": "Refinado Algod\u00f3n Mesa", "quantity": 5, "total": 1444.2, "discount": 0, "final_price": 1444.2}]
