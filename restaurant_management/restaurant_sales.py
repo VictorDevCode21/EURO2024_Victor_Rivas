@@ -45,7 +45,7 @@ class RestaurantSales:
             items.append(f"{product.name} x {quantity} - ${subtotal:.2f}")
             total += subtotal
         else:
-            return f"Producto no encontrado: {product_name}"
+            return f"Producto no encontrado o sin disponibilidad: {product_name}"
 
         if self.is_perfect_number(int(client_id)):
             discount = total * 0.15
@@ -55,13 +55,22 @@ class RestaurantSales:
         
         updated_product = self.update_inventory(product_name, quantity, product_type)
         
-        if updated_product: return f"Productos seleccionados:\n" + "\n".join(items) + f'\nPrecio del producto: {product.price:.2f}' + f"\nSubtotal: ${total:.2f}\nDescuento: ${discount:.2f}\nTotal: ${total:.2f}\nCompra exitosa."
-        else: return "Error al actualizar el inventario."
+        if updated_product:
+            sale_data = {
+                'client_id': client_id,
+                'product_name': product_name,
+                'quantity': quantity,
+                'total': round(total + discount, 2),
+                'discount': round(discount,2),
+                'final_price': round(total,2)
+            }
+            return f"Productos seleccionados:\n" + "\n".join(items) + f'\nPrecio del producto: {product.price:.2f}' + f"\nSubtotal: ${total:.2f}\nDescuento: ${discount:.2f}\nTotal: ${total:.2f}\nCompra exitosa.", sale_data
+        else:
+            return "Error al actualizar el inventario.", None
         
     def update_inventory(self, product_name, quantity, product_type):
         product = next((p for p in self.restaurant.products if p.name == product_name and p.product_type == product_type), None)
         if product:
             product.stock -= quantity
-            print(f"Inventario actualizado: {product.name} - {product.stock} unidades")
             return product
         return None 

@@ -7,6 +7,7 @@ from tickets_and_sales_management.sales import Sales
 from assistance_management.assistance import Assistance
 from restaurant_management.restaurant import Restaurant
 from restaurant_management.restaurant_sales import RestaurantSales
+from indicators.statistics import Statistics
 from datetime import datetime
 import os
 from dotenv import load_dotenv
@@ -27,6 +28,7 @@ stadiums_file = os.path.join(data_dir, "stadiums.txt")
 matches_file = os.path.join(data_dir, "matches.txt")
 clients_file = os.path.join(data_dir, "clients.txt")
 tickets_file = os.path.join(data_dir, "tickets.txt")
+sells_file = os.path.join(data_dir, "sells.txt")
 
 
 # Creamos una funcion para que si no hay carpetas con la data, cree la carpeta y los archivos
@@ -41,6 +43,7 @@ def create_data_folder_and_files():
         matches_file,
         clients_file,
         tickets_file,
+        sells_file
     ]:
         if not os.path.exists(file_path):
             # Intentamos crear los archivos
@@ -97,6 +100,7 @@ def Main():
     matches_data = load_from_file(matches_file)
     clients_data = load_from_file(clients_file)
     tickets_data = load_from_file(tickets_file)
+    sells_data = load_from_file(sells_file)
 
     # Si no hay datos, los cargamos desde la API y los guardamos en un archivo txt
     if not teams_data or not stadiums_data or not matches_data:
@@ -190,6 +194,9 @@ def Main():
 
     # Instanciamos la clase RestaurantSales
     restaurant_sales = RestaurantSales(restaurant=restaurant, sales=sales)
+    
+    # Instanciamos la clase Statistics
+    statistics = Statistics(sells_data=sells_data, sales=sales, matches=matches, assistance=assistance)
 
     # Ejecucion del programa:
     while True:
@@ -329,9 +336,7 @@ def Main():
             product_quantity = int(
                 input("Ingrese la cantidad de productos que desea comprar: ")
             )
-            message = restaurant_sales.sell_products(
-                client_id, product_name, product_quantity, product_type
-            )
+            message, sale_data = restaurant_sales.sell_products(client_id, product_name, product_quantity, product_type)
             print(message)
             # Validamos que solo cuando la compra sea exitosa se actualice el inventario
             if "Compra exitosa" in message:
@@ -349,18 +354,22 @@ def Main():
                         save_data_to_file(stadiums_data, stadiums_file)
                         # Recargamos los datos para poder trabajar basados en la nueva informacion
                         restaurant.load_products(stadiums_data)
+                        sells_data.append(sale_data)
+                        save_data_to_file(sells_data, sells_file)
+                        
                     except Exception as e:
                         print(f"Error al actualizar el archivo stadiums.txt: {e}")
 
         elif option == 6:
-            # Código para indicadores de gestión
-            pass
+            statistics.show_statistics()
+            statistics.generate_charts()
 
         if option == 7:
             break
+        
+        else:
+            print("\nOpción no válida. Por favor, intente de nuevo.")
 
-    print("Gracias por usar el programa de la EURO 2024, ¡vuelva pronto!")
-
-    
+    print("\nGracias por usar el programa de la EURO 2024, ¡vuelva pronto!")
 
 Main()
