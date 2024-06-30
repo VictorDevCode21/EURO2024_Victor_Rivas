@@ -20,6 +20,7 @@ class DataManager:
         
         self.create_data_folder_and_files()
 
+    # Metodo para crear las carpetas y archivos en las rutas especificadas
     def create_data_folder_and_files(self):
         if not os.path.exists(self.data_dir):
             os.makedirs(self.data_dir)
@@ -39,10 +40,12 @@ class DataManager:
                 except Exception as e:
                     print(f"Error al crear el archivo {file_path}: {e}")
 
+    # Metodo para guardar los datos en un archivo
     def save_data_to_file(self, data, file_name):
         with open(file_name, "w") as file:
             json.dump(data, file)
 
+    # Metodo para cargar los datos desde un archivo
     def load_from_file(self, filename):
         if os.path.exists(filename):
             try:
@@ -54,6 +57,7 @@ class DataManager:
                 )
         return None
 
+    # Metodo para pre-cargar los datos de la api en archivos
     def pre_load_data(self):
         teams_data = API.get_teams(self.teams_api)
         if teams_data:
