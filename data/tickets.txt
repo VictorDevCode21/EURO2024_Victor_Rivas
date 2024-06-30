@@ -270,5 +270,29 @@
         "seat": "G358",
         "ticket_id": "7d534bc9-15cb-42ad-807b-779a702ba9fa",
         "assistance": false
+    },
+    {
+        "client_id": 30496974,
+        "match_id": "abd2ab53-d4e9-4dc2-86d3-57082dfd1296",
+        "ticket_type": "vip",
+        "seat": "V201",
+        "ticket_id": "2eb168c6-4aaa-450e-95fc-1705d87dd7ae",
+        "assistance": false
+    },
+    {
+        "client_id": 30496974,
+        "match_id": "40ceee04-b1b9-4846-ba1a-b4afa2df7111",
+        "ticket_type": "vip",
+        "seat": "V202",
+        "ticket_id": "edd1a57e-6115-495d-b53f-1f5f1c116868",
+        "assistance": false
+    },
+    {
+        "client_id": 3716600,
+        "match_id": "40ceee04-b1b9-4846-ba1a-b4afa2df7111",
+        "ticket_type": "vip",
+        "seat": "V206",
+        "ticket_id": "686196e9-ff2d-4b9f-99b0-0c70eb6df727",
+        "assistance": true
     }
 ]

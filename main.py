@@ -8,6 +8,7 @@ from assistance_management.assistance import Assistance
 from restaurant_management.restaurant import Restaurant
 from restaurant_management.restaurant_sales import RestaurantSales
 from indicators.statistics import Statistics
+from data_management import DataManager
 from datetime import datetime
 import os
 from dotenv import load_dotenv
@@ -16,113 +17,33 @@ import json
 # Cargamos el archivo dotenv
 load_dotenv()
 
-# Cargamos los endpoints de las apis desde el archivo dotenv
-teams_api = os.getenv("TEAMS_API")
-stadiums_api = os.getenv("STADIUMS_API")
-matches_api = os.getenv("MATCHES_API")
-
-# Creamos variables con la ruta de los archivos txt que generaremos
-data_dir = "data"
-teams_file = os.path.join(data_dir, "teams.txt")
-stadiums_file = os.path.join(data_dir, "stadiums.txt")
-matches_file = os.path.join(data_dir, "matches.txt")
-clients_file = os.path.join(data_dir, "clients.txt")
-tickets_file = os.path.join(data_dir, "tickets.txt")
-sells_file = os.path.join(data_dir, "sells.txt")
-
-
-# Creamos una funcion para que si no hay carpetas con la data, cree la carpeta y los archivos
-def create_data_folder_and_files():
-    if not os.path.exists(data_dir):
-        os.makedirs(data_dir)
-
-    # Recorremos las rutas para crear los archivos en caso de que no existan
-    for file_path in [
-        teams_file,
-        stadiums_file,
-        matches_file,
-        clients_file,
-        tickets_file,
-        sells_file
-    ]:
-        if not os.path.exists(file_path):
-            # Intentamos crear los archivos
-            try:
-                with open(file_path, "w") as file:
-                    file.write("[]")
-            # Si falla, capturamos la excepcion y mostramos un mensaje
-            except Exception as e:
-                print(f"Error al crear el archivo {file_path}: {e}")
-
-
-# Creamos una funcion para guardar datos dentro de un archivo
-def save_data_to_file(data, file_name):
-    with open(file_name, "w") as file:
-        json.dump(data, file)
-
-
-# Creamos una funcion para cargar los datos desde el archivo txt
-def load_from_file(filename):
-    if os.path.exists(filename):
-        try:
-            with open(filename, "r") as file:
-                return json.load(file)
-        except json.JSONDecodeError:
-            print(
-                f"Error al decodificar el archivo {filename}. El archivo puede estar vacío o malformado."
-            )
-    return None
-
-
-# Pre cargamos la data y la guardamos en un archivo txt para poder manejarla sin llamar a la api de nuevo
-def pre_load_data():
-    teams_data = API.get_teams(teams_api)
-    if teams_data:
-        save_data_to_file(teams_data, teams_file)
-
-    stadiums_data = API.get_stadiums(stadiums_api)
-    if stadiums_data:
-        save_data_to_file(stadiums_data, stadiums_file)
-
-    matches_data = API.get_matches(matches_api)
-    if matches_data:
-        save_data_to_file(matches_data, matches_file)
+data_manager = DataManager()
 
 
 # Funcion principal del programa
 def Main():
-    # Llamamos a la funcion para crear la carpeta data
-    create_data_folder_and_files()
 
     # Cargamos los datos desde el archivo txt
-    teams_data = load_from_file(teams_file)
-    stadiums_data = load_from_file(stadiums_file)
-    matches_data = load_from_file(matches_file)
-    clients_data = load_from_file(clients_file)
-    tickets_data = load_from_file(tickets_file)
-    sells_data = load_from_file(sells_file)
+    teams_data = data_manager.load_from_file(data_manager.teams_file)
+    stadiums_data = data_manager.load_from_file(data_manager.stadiums_file)
+    matches_data = data_manager.load_from_file(data_manager.matches_file)
+    clients_data = data_manager.load_from_file(data_manager.clients_file)
+    tickets_data = data_manager.load_from_file(data_manager.tickets_file)
+    sells_data = data_manager.load_from_file(data_manager.sells_file)
 
     # Si no hay datos, los cargamos desde la API y los guardamos en un archivo txt
     if not teams_data or not stadiums_data or not matches_data:
-        pre_load_data()
+        data_manager.pre_load_data()
         # Cargamos nuevamente los datos
-        teams_data = load_from_file(teams_file)
-        stadiums_data = load_from_file(stadiums_file)
-        matches_data = load_from_file(matches_file)
+        teams_data = data_manager.load_from_file(data_manager.teams_file)
+        stadiums_data = data_manager.load_from_file(data_manager.stadiums_file)
+        matches_data = data_manager.load_from_file(data_manager.matches_file)
 
     # Creamos instancias para la clase Team
-    teams = {
-        team["id"]: Team(team["id"], team["code"], team["name"], team["group"])
-        for team in teams_data
-    }
+    teams = {team["id"]: Team(team["id"], team["code"], team["name"], team["group"])for team in teams_data}
 
     # Creamos instancias para la clase Stadium
-    stadiums = {
-        stadium["id"]: Stadium(
-            stadium["id"], stadium["name"], stadium["city"], stadium["capacity"]
-        )
-        for stadium in stadiums_data
-    }
+    stadiums = {stadium["id"]: Stadium(stadium["id"], stadium["name"], stadium["city"], stadium["capacity"])for stadium in stadiums_data}
 
     # Agregamos los asientos para los estadios acorde al tipo de entrada:
     for stadium in stadiums.values():
@@ -149,17 +70,11 @@ def Main():
 
             # Manejamos los casos en los que no se encuentren los equipos o estadios
             if not home_team:
-                print(
-                    f"Equipo local con ID {home_team_id} no encontrado para el partido {match_id}"
-                )
+                print(f"Equipo local con ID {home_team_id} no encontrado para el partido {match_id}")
             if not away_team:
-                print(
-                    f"Equipo visitante con ID {away_team_id} no encontrado para el partido {match_id}"
-                )
+                print(f"Equipo visitante con ID {away_team_id} no encontrado para el partido {match_id}")
             if not stadium:
-                print(
-                    f"Estadio con ID {stadium_id} no encontrado para el partido {match_id}"
-                )
+                print(f"Estadio con ID {stadium_id} no encontrado para el partido {match_id}")
 
             # Si se encuentran los equipos y estadios, creamos las instancias de Match
             if home_team and away_team and stadium:
@@ -261,13 +176,13 @@ def Main():
                     print(f"Fecha inválida: {chosen_date}. Por favor ingrese la fecha en formato YYYY-MM-DD.")
         
         # Opcion 2: Gestión de ventas de entradas
-        if option == 2:
+        elif option == 2:
             sales.process_ticket_sale(matches)
-            save_data_to_file(
-                [vars(client) for client in sales.clients.values()], clients_file
+            data_manager.save_data_to_file(
+                [vars(client) for client in sales.clients.values()], data_manager.clients_file
             )
-            save_data_to_file(
-                [ticket.to_dict() for ticket in sales.tickets], tickets_file
+            data_manager.save_data_to_file(
+                [ticket.to_dict() for ticket in sales.tickets], data_manager.tickets_file
             )
 
         # Opcion 3: Gestion de asistencia a partidos
@@ -276,7 +191,7 @@ def Main():
             valid, message = assistance.validate_authenticity(ticket_id)
             print(message)
             if valid:
-                assistance.save_data(tickets_file)
+                assistance.save_data(data_manager.tickets_file)
                 print(message)
 
         # Opcion 4: Gestion de restaurantes
@@ -351,19 +266,20 @@ def Main():
                                     if product['name'] == product_name and product['adicional'] == category:
                                         product['stock'] -= product_quantity
                         # Guardamos los cambios en el archivo txt
-                        save_data_to_file(stadiums_data, stadiums_file)
+                        data_manager.save_data_to_file(stadiums_data, data_manager.stadiums_file)
                         # Recargamos los datos para poder trabajar basados en la nueva informacion
                         restaurant.load_products(stadiums_data)
                         sells_data.append(sale_data)
-                        save_data_to_file(sells_data, sells_file)
+                        data_manager.save_data_to_file(sells_data, data_manager.sells_file)
                         
                     except Exception as e:
                         print(f"Error al actualizar el archivo stadiums.txt: {e}")
-
+        # Mostramos las estadisticas y llamamos al metodo para generar los graficos en formato .png
         elif option == 6:
             statistics.show_statistics()
 
-        if option == 7:
+        # Opcion 7: Salir del programa
+        elif option == 7:
             break
         
         else:

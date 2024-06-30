@@ -88,20 +88,20 @@ class Statistics:
         top_selling_products = self.get_top_selling_products()
         top_clients = self.get_top_clients()
 
-        print(f"Promedio de gasto de un cliente VIP en un partido (ticket + restaurante): ${average_spending:.2f}")
-        print("Tabla de asistencia a los partidos de mejor a peor:")
+        print(f"\nPromedio de gasto de un cliente VIP en un partido (ticket + restaurante): ${average_spending:.2f}")
+        print("\nTabla de asistencia a los partidos de mejor a peor:\n")
         for match in match_attendance:
-            print(f"Partido: {match['match']} - Estadio: {match['stadium']} - Boletos vendidos: {match['total_tickets']} - Asistieron: {match['attended_tickets']} - Relación asistencia/venta: {match['attendance_ratio']:.2f}")
+            print(f"\nPartido: {match['match']} - Estadio: {match['stadium']} - Boletos vendidos: {match['total_tickets']} - Asistieron: {match['attended_tickets']} - Relación asistencia/venta: {match['attendance_ratio']:.2f}")
 
-        print(f"Partido con mayor asistencia: {highest_attendance_match['match']} - Asistieron: {highest_attendance_match['attended_tickets']}")
-        print(f"Partido con mayor boletos vendidos: {highest_tickets_sold_match['match']} - Boletos vendidos: {highest_tickets_sold_match['total_tickets']}")
-        print("Top 3 productos más vendidos en el restaurante:")
+        print(f"\nPartido con mayor asistencia: {highest_attendance_match['match']} - Asistieron: {highest_attendance_match['attended_tickets']}")
+        print(f"\nPartido con mayor boletos vendidos: {highest_tickets_sold_match['match']} - Boletos vendidos: {highest_tickets_sold_match['total_tickets']}")
+        print("\nTop 3 productos más vendidos en el restaurante:")
         for product, quantity in top_selling_products:
             print(f"Producto: {product} - Cantidad vendida: {quantity}")
 
-        print("Top 3 clientes (clientes que más compraron boletos):")
+        print("\nTop 3 clientes (clientes que más compraron boletos):")
         for client_id, purchase_count in top_clients:
-            print(f"Cliente ID: {client_id} - Boletos comprados: {purchase_count}")
+            print(f"\nCliente ID: {client_id} - Boletos comprados: {purchase_count}")
         
         # Save attendance table as image
         self.save_table_as_image(attendance_table, 'attendance_table.png', 'Asistencia a los partidos de mejor a peor')
