@@ -362,7 +362,6 @@ def Main():
 
         elif option == 6:
             statistics.show_statistics()
-            statistics.generate_charts()
 
         if option == 7:
             break
