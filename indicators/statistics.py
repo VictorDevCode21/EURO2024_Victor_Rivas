@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import os
 import pandas as pd
 
+
+# Clase Statistics
 class Statistics:
     def __init__(self, sells_data, sales, matches, assistance):
         self.sells_data = sells_data
@@ -10,6 +12,7 @@ class Statistics:
         self.assistance = assistance
         self.statistics_dir = 'statistics'
 
+    # Método para calcular el promedio de gasto de un cliente VIP
     def calculate_average_spending(self):
         vip_tickets = [ticket for ticket in self.sales.tickets if ticket.ticket_type.lower() == 'vip']
         total_spending = 0
@@ -31,6 +34,7 @@ class Statistics:
             
         return average_spending
 
+    # Método para calcular la asistencia a los partidos de mayor a menor
     def calculate_match_attendance(self):
         match_attendance = []
         for match in self.matches:
@@ -47,14 +51,17 @@ class Statistics:
             match_attendance.append(match_info)
         return sorted(match_attendance, key=lambda x: x["attendance_ratio"], reverse=True)
 
+    # Metodo para obtener el partido con mayor asistencia
     def get_highest_attendance_match(self, match_attendance):
         highest_attendance_match = max(match_attendance, key=lambda x: x["attended_tickets"])
         return highest_attendance_match
 
+    # Metodo para obtener el partido con mayor boletos vendidos
     def get_highest_tickets_sold_match(self, match_attendance):
         highest_tickets_sold_match = max(match_attendance, key=lambda x: x["total_tickets"])
         return highest_tickets_sold_match
 
+    # Método para obtener los 3 productos más vendidos
     def get_top_selling_products(self):
         product_sales = {}
         for sell in self.sells_data:
@@ -67,6 +74,7 @@ class Statistics:
         top_selling_products = sorted(product_sales.items(), key=lambda x: x[1], reverse=True)[:3]
         return top_selling_products
 
+    # Método para obtener los 3 clientes que más compraron boletos
     def get_top_clients(self):
         client_purchases = {}
         for ticket in self.sales.tickets:
@@ -78,7 +86,9 @@ class Statistics:
         top_clients = sorted(client_purchases.items(), key=lambda x: x[1], reverse=True)[:3]
         return top_clients
 
+    # Metodo para mostrar las estadisticas
     def show_statistics(self):
+        # Llama a los metodos para calcular las estadisticas
         average_spending = self.calculate_average_spending()
         match_attendance = self.calculate_match_attendance()
         attendance_table = pd.DataFrame(match_attendance)
@@ -106,6 +116,7 @@ class Statistics:
         # Save attendance table as image
         self.save_table_as_image(attendance_table, 'attendance_table.png', 'Asistencia a los partidos de mejor a peor')
 
+        # Llama al metodo generate_charts para generar los graficos de las estadisticas calculadas
         self.generate_charts(
             average_spending,
             highest_attendance_match,
@@ -115,6 +126,7 @@ class Statistics:
             match_attendance
         )
     
+    # Guardamos la tabla de asistencia a los partidos como imagen
     def save_table_as_image(self, table, filename, title):
         if not os.path.exists(self.statistics_dir):
             os.makedirs(self.statistics_dir)
@@ -129,9 +141,9 @@ class Statistics:
         plt.close()
         
 
+    # Metodo para generar graficas usando matplotlib
     def generate_charts(self, average_spending, highest_attendance_match, highest_tickets_sold_match, top_selling_products, top_clients, match_attendance):
         # Crear carpeta statistics si no existe
-        
         if not os.path.exists(self.statistics_dir):
             os.makedirs(self.statistics_dir)
 
