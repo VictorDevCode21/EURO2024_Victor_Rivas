@@ -1,6 +1,7 @@
 import typing
 
 
+# Clase Product
 class Product:
     def __init__(self, name: str, product_type: str, price: float, category: str, stock: int):
         self.name = name
@@ -9,6 +10,7 @@ class Product:
         self.category = category
         self.stock = stock
         
+    # Metodo para convertir la información del producto en un diccionario
     def to_dict(self):
         return {
             "name": self.name,
