@@ -3,6 +3,9 @@ import json
 from matches_and_stadium_management.api import API
 from dotenv import load_dotenv
 
+# Cargamos el archivo dotenv
+load_dotenv()
+
 # Clase para manejar la carga de los datos desde las api y crear las carpetas y archivos en las rutas especificadas.
 class DataManager:
     def __init__(self):
