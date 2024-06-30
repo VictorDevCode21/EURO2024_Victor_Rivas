@@ -1,9 +1,12 @@
 from .product import Product
 
+
+# Clase Restaurant
 class Restaurant:
     def __init__(self):
         self.products = []
 
+    # Método para cargar los productos desde el archivo de stadiums.txt
     def load_products(self, stadium_data):
         if stadium_data:
             for stadium in stadium_data:
@@ -39,22 +42,28 @@ class Restaurant:
                     print("No se encontraron restaurantes en el estadio")
         else:
             print("No se encontraron estadios")
-                        
+    
+    # Método para obtener la información de los productos
     def get_info(self):
         return self.products
 
+    # Método para buscar productos por nombre
     def search_by_name(self, name):
         return [product for product in self.products if name.lower() in product.name.lower()]
 
+    # Método para buscar productos por tipo
     def search_by_type(self, product_type):
         return [product for product in self.products if product.product_type == product_type]
 
+    # Método para buscar productos en un rango de precio especifico
     def search_by_price_range(self, min_price, max_price):
         return [product for product in self.products if min_price <= product.price <= max_price]
     
+    # Metodo para retornar la informacion de los productos en formato de string
     def __str__(self):
         return self.get_info()
     
+    # Metodo para retornar la informacion de los productos usando la representacion de string
     def __repr__(self):
         return self.get_info()
     
