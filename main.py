@@ -287,4 +287,5 @@ def Main():
 
     print("\nGracias por usar el programa de la EURO 2024, ¡vuelva pronto!")
 
-Main()
+if __name__ == '__main__':
+    Main()
